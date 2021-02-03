@@ -95,5 +95,31 @@ class BankAccountTest {
         assertFalse(BankAccount.isAmountValid(1.111)); //Border case, too many decimals (positive)
         assertFalse(BankAccount.isAmountValid(-1.111)); //Border case, too many decimals (negative)
     }
+    @Test
+    void depositTest() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 100);
+        bankAccount.deposit(100);
+        assertEquals(200, bankAccount.getBalance()); //Equivalence case of depositing a positive integer
+
+        bankAccount.deposit(100.1);
+        assertEquals(300.1, bankAccount.getBalance()); //Equivalence case for depositing a positive float with one decimal
+
+        bankAccount.deposit(100.01);
+        assertEquals(400.11, bankAccount.getBalance()); //Equivalence case for depositing a positive float with two decimals
+
+        bankAccount.deposit(0);
+        assertEquals(400.11, bankAccount.getBalance()); //Border case for depositing 0
+
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-1)); //Equivalence case for negative integers
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-1.1)); //Equivalence case for negative floats to one decimal place
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-1.11)); //Equivalence case for negative floats to two decimal places
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-1.111)); //Equivalence case for negative floats to three decimal places
+
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(1.111)); //Border case for inputs with too many decimal places
+
+
+
+
+    }
 
 }
