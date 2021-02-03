@@ -117,7 +117,24 @@ class BankAccountTest {
 
         assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(1.111)); //Border case for inputs with too many decimal places
 
+    }
+    @Test
+    void transferTest() {
+        BankAccount bankAccount1 = new BankAccount("a@b.com", 100);
+        BankAccount bankAccount2 = new BankAccount("a@b.com", 100);
 
+        bankAccount1.transfer(100, bankAccount1, bankAccount2); //Equivalence case of transferring a positive integer with correct funding
+        assertEquals(0, bankAccount1.getBalance()); // Border case of 0 for funds
+        bankAccount2.transfer(100, bankAccount2, bankAccount1); // Border case of transferring money into an account that has 0 funds
+        assertEquals(bankAccount1.getBalance(), bankAccount1.getBalance());
+
+        //Illegal Cases
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(10000, bankAccount1, bankAccount2)); //Border case, transferring funds that we don't have
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(-10, bankAccount1, bankAccount2)); //Equivalence case, negative transfer amount\
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(10.123, bankAccount1, bankAccount2)); //Border case, too many decimals
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(-1.1, bankAccount1, bankAccount2)); //Equivalence case, negative float with one decimal
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(-1.11, bankAccount1, bankAccount2)); //Equivalence case, negative float with one decimal
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(100, bankAccount1, bankAccount1)); //Equivalence case, bank accounts are the same
 
 
     }
